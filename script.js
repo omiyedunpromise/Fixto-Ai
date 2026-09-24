@@ -1,7 +1,7 @@
 // --- CONFIGURATION ---
 // REPLACE THIS WITH YOUR ACTUAL HUGGING FACE SPACE URL
-const BACKEND_URL = "https://your-username-fixto-ai.hf.space/api/chat"; 
-const FEEDBACK_URL = "https://your-username-fixto-ai.hf.space/api/feedback";
+const BACKEND_URL = "https://x-zith123-fixto-ai.hf.space/api/chat"; 
+const FEEDBACK_URL = "https://x-zith123-fixto-ai.hf.space/api/feedback";
 
 // --- DOM ELEMENTS ---
 const chatCanvas = document.getElementById('chat-canvas');
