@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixto AI | X-ZITH TECHNOLOGY</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <button class="btn-new-chat"><i class="fas fa-plus"></i> New Chat</button>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search chats...">
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active"><i class="fas fa-comment"></i> Chats</a>
+            <a href="#" class="nav-item"><i class="fas fa-image"></i> Image Gallery</a>
+            <a href="#" class="nav-item"><i class="fas fa-book"></i> Library</a>
+            <a href="#" class="nav-item"><i class="fas fa-briefcase"></i> Projects</a>
+        </nav>
+
+        <div class="sidebar-history">
+            <h4>Recent</h4>
+            <ul id="chat-history-list">
+                <!-- Chats will be injected here by JS -->
+            </ul>
+        </div>
+    </aside>
+
+    <!-- MAIN CHAT AREA -->
+    <main class="main-content">
+        <div class="chat-canvas" id="chat-canvas">
+            <div class="welcome-screen" id="welcome-screen">
+                <h1>Fixto AI</h1>
+                <p>Powered by X-ZITH TECHNOLOGY. How can I help you today?</p>
+            </div>
+        </div>
+
+        <!-- INPUT AREA -->
+        <div class="input-area">
+            <div class="input-box">
+                <textarea id="user-input" placeholder="Message Fixto AI..." rows="1"></textarea>
+                <div class="input-actions">
+                    <button id="voice-btn" title="Voice Input"><i class="fas fa-microphone"></i></button>
+                    <button id="send-btn" title="Send"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
