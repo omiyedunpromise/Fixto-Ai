@@ -19,22 +19,32 @@
         </div>
         
         <nav class="sidebar-nav">
-            <a href="#" class="nav-item active"><i class="fas fa-comment"></i> Chats</a>
-            <a href="#" class="nav-item"><i class="fas fa-image"></i> Image Gallery</a>
-            <a href="#" class="nav-item"><i class="fas fa-book"></i> Library</a>
-            <a href="#" class="nav-item"><i class="fas fa-briefcase"></i> Projects</a>
+            <!-- Added 'nav-link' class for JavaScript clicking -->
+            <a href="#" class="nav-link active" data-view="chats"><i class="fas fa-comment"></i> Chats</a>
+            <a href="#" class="nav-link" data-view="images"><i class="fas fa-image"></i> Image Gallery</a>
+            <a href="#" class="nav-link" data-view="library"><i class="fas fa-book"></i> Library</a>
+            <a href="#" class="nav-link" data-view="projects"><i class="fas fa-briefcase"></i> Projects</a>
         </nav>
 
         <div class="sidebar-history">
             <h4>Recent</h4>
             <ul id="chat-history-list">
-                <!-- Chats will be injected here by JS -->
+                <li><i class="fas fa-message"></i> Welcome to Fixto AI</li>
             </ul>
         </div>
     </aside>
 
-    <!-- MAIN CHAT AREA -->
+    <!-- MAIN CONTENT -->
     <main class="main-content">
+        <!-- NEW: Top Header with Auth Buttons -->
+        <header class="top-header">
+            <div class="header-title">Fixto AI</div>
+            <div class="auth-buttons">
+                <button class="btn-auth btn-login">Log In</button>
+                <button class="btn-auth btn-signup">Sign Up</button>
+            </div>
+        </header>
+
         <div class="chat-canvas" id="chat-canvas">
             <div class="welcome-screen" id="welcome-screen">
                 <h1>Fixto AI</h1>
@@ -45,6 +55,13 @@
         <!-- INPUT AREA -->
         <div class="input-area">
             <div class="input-box">
+                <!-- NEW: Upload Button -->
+                <button id="upload-btn" title="Attach image, file, or video">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <input type="file" id="file-input" hidden accept="image/*,video/*,.pdf,.doc,.docx,.txt">
+                <span id="file-name" class="file-name-display"></span>
+
                 <textarea id="user-input" placeholder="Message Fixto AI..." rows="1"></textarea>
                 <div class="input-actions">
                     <button id="voice-btn" title="Voice Input"><i class="fas fa-microphone"></i></button>
@@ -56,4 +73,4 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+</html>                          
