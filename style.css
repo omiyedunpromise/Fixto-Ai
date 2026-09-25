@@ -4,49 +4,238 @@
     --bg-tertiary: #313244;
     --text-primary: #cdd6f4;
     --text-secondary: #a6adc8;
-    --accent: #89b4fa; /* Electric Blue */
+    --accent: #89b4fa;
     --danger: #f38ba8;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
 body { display: flex; height: 100vh; background: var(--bg-primary); color: var(--text-primary); }
 
 /* SIDEBAR */
 .sidebar { width: 280px; background: var(--bg-secondary); padding: 20px; display: flex; flex-direction: column; border-right: 1px solid var(--bg-tertiary); }
-.btn-new-chat { width: 100%; padding: 12px; background: var(--accent); color: #11111b; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
+.btn-new-chat { width: 100%; padding: 12px; background: var(--accent); color: #11111b; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 15px; transition: 0.2s; }
+.btn-new-chat:hover { opacity: 0.9; }
 .search-box { display: flex; align-items: center; background: var(--bg-tertiary); padding: 10px; border-radius: 8px; margin-bottom: 20px; }
-.search-box input { background: none; border: none; color: var(--text-primary); width: 100%; outline: none; }
-.sidebar-nav { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-.nav-item { color: var(--text-secondary); text-decoration: none; padding: 10px; border-radius: 8px; display: flex; align-items: center; gap: 10px; }
-.nav-item.active, .nav-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
-.sidebar-history h4 { color: var(--text-secondary); font-size: 12px; margin-bottom: 10px; text-transform: uppercase; }
-.sidebar-history ul { list-style: none; overflow-y: auto; flex: 1; }
-.sidebar-history li { padding: 10px; border-radius: 8px; cursor: pointer; color: var(--text-secondary); display: flex; justify-content: space-between; }
-.sidebar-history li:hover { background: var(--bg-tertiary); }
+.search-box input { background: none; border: none; color: var(--text-primary); width: 100%; outline: none; margin-left: 10px; }
 
-/* MAIN CONTENT */
+/* CLICKABLE SIDEBAR NAV */
+.sidebar-nav { display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; }
+.nav-link { color: var(--text-secondary); text-decoration: none; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 12px; transition: 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.nav-link.active { background: var(--bg-tertiary); color: var(--accent); font-weight: 600; }
+
+.sidebar-history { flex: 1; overflow-y: auto; }
+.sidebar-history h4 { color: var(--text-secondary); font-size: 12px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.sidebar-history ul { list-style: none; }
+.sidebar-history li { padding: 10px; border-radius: 8px; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.sidebar-history li:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+
+/* MAIN CONTENT & TOP HEADER */
 .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
+.top-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; border-bottom: 1px solid var(--bg-tertiary); }
+.header-title { font-weight: bold; font-size: 18px; color: var(--text-secondary); }
+.auth-buttons { display: flex; gap: 10px; }
+.btn-auth { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--bg-tertiary); background: transparent; color: var(--text-primary); cursor: pointer; font-weight: 500; transition: 0.2s; }
+.btn-auth:hover { background: var(--bg-tertiary); }
+.btn-signup { background: var(--accent); color: #11111b; border: none; }
+.btn-signup:hover { opacity: 0.9; }
+
+/* CHAT CANVAS */
 .chat-canvas { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 .welcome-screen { margin: auto; text-align: center; color: var(--text-secondary); }
 .welcome-screen h1 { font-size: 48px; color: var(--accent); margin-bottom: 10px; }
 
 /* MESSAGES */
 .message { max-width: 800px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; }
-.msg-content { padding: 15px; border-radius: 12px; line-height: 1.6; }
+.msg-content { padding: 15px; border-radius: 12px; line-height: 1.6; word-wrap: break-word; }
 .user-msg .msg-content { background: var(--bg-tertiary); align-self: flex-end; }
 .ai-msg .msg-content { background: transparent; }
 .msg-actions { display: flex; gap: 15px; margin-top: 8px; padding-left: 5px; }
-.msg-actions button { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; }
-.msg-actions button:hover { color: var(--accent); }
+.msg-actions button { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; transition: 0.2s; }
+.msg-actions button:hover { color: var(--text-primary); }
 .msg-actions button.active-like { color: var(--accent); }
 .msg-actions button.active-dislike { color: var(--danger); }
 
 /* INPUT AREA */
 .input-area { padding: 20px; width: 100%; max-width: 840px; margin: 0 auto; }
-.input-box { display: flex; align-items: flex-end; background: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 16px; padding: 10px; }
+.input-box { display: flex; align-items: flex-end; background: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 16px; padding: 10px; transition: 0.2s; }
+.input-box:focus-within { border-color: var(--accent); }
+
+/* UPLOAD BUTTON & FILE NAME */
+#upload-btn { background: none; border: none; color: var(--text-secondary); font-size: 18px; cursor: pointer; padding: 10px; transition: 0.2s; }
+#upload-btn:hover { color: var(--accent); }
+.file-name-display { font-size: 12px; color: var(--accent); margin-right: 10px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; align-self: center; }
+
 .input-box textarea { flex: 1; background: none; border: none; color: var(--text-primary); font-size: 16px; resize: none; outline: none; padding: 10px; max-height: 200px; }
 .input-actions { display: flex; gap: 10px; }
-.input-actions button { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-#send-btn { background: var(--accent); color: #11111b; }
+.input-actions button { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.input-actions button:hover { background: var(--accent); color: #11111b; }
 #voice-btn.listening { background: var(--danger); color: white; animation: pulse 1s infinite; }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+``` is missing, let me fix that.
+
+#### 3. Update `script.js`
+*(Adds the logic to make sidebar items clickable, handles the file upload button, and connects the auth buttons)*
+
+```javascript
+// --- CONFIGURATION ---
+const BACKEND_URL = "https://x-zith123-fixto-ai.hf.space/api/chat"; 
+const FEEDBACK_URL = "https://x-zith123-fixto-ai.hf.space/api/feedback";
+
+// --- DOM ELEMENTS ---
+const chatCanvas = document.getElementById('chat-canvas');
+const userInput = document.getElementById('user-input');
+const sendBtn = document.getElementById('send-btn');
+const voiceBtn = document.getElementById('voice-btn');
+const welcomeScreen = document.getElementById('welcome-screen');
+const uploadBtn = document.getElementById('upload-btn');
+const fileInput = document.getElementById('file-input');
+const fileNameDisplay = document.getElementById('file-name');
+const navLinks = document.querySelectorAll('.nav-link');
+
+// --- 1. SIDEBAR CLICKABLE LOGIC ---
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Remove active class from all links
+        navLinks.forEach(l => l.classList.remove('active'));
+        // Add active class to clicked link
+        link.classList.add('active');
+        
+        const view = link.getAttribute('data-view');
+        console.log(`Switched to view: ${view}`);
+        
+        // For now, show an alert. Later, we will build the actual Image/Library/Project views!
+        if(view !== 'chats') {
+            alert(`${view.charAt(0).toUpperCase() + view.slice(1)} view coming soon in Phase 2!`);
+        }
+    });
+});
+
+// --- 2. AUTH BUTTONS LOGIC ---
+document.querySelector('.btn-login').addEventListener('click', () => {
+    alert("Login modal will open here (Integrated with Supabase Auth in Phase 2)");
+});
+document.querySelector('.btn-signup').addEventListener('click', () => {
+    alert("Sign Up modal will open here (Integrated with Supabase Auth in Phase 2)");
+});
+
+// --- 3. FILE UPLOAD LOGIC ---
+uploadBtn.addEventListener('click', () => {
+    fileInput.click(); // Triggers the hidden file input
+});
+
+fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+        fileNameDisplay.textContent = fileInput.files[0].name;
+    } else {
+        fileNameDisplay.textContent = "";
+    }
+});
+
+// --- 4. CHAT LOGIC ---
+function addMessage(role, content, type = 'text') {
+    if (welcomeScreen) welcomeScreen.style.display = 'none';
+
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', role === 'user' ? 'user-msg' : 'ai-msg');
+
+    let contentHTML = '';
+    if (type === 'image' && role === 'assistant') {
+        contentHTML = `<img src="${content}" alt="Generated Image" style="max-width: 100%; border-radius: 12px; margin-top: 10px;">`;
+    } else {
+        contentHTML = `<p>${content}</p>`;
+    }
+
+    msgDiv.innerHTML = `
+        <div class="msg-content">${contentHTML}</div>
+        ${role === 'assistant' ? `
+        <div class="msg-actions">
+            <button onclick="speakText(this)" title="Read Aloud"><i class="fas fa-volume-up"></i></button>
+            <button onclick="copyText(this)" title="Copy"><i class="fas fa-copy"></i></button>
+            <button onclick="sendFeedback(this, true)" title="Good Response"><i class="fas fa-thumbs-up"></i></button>
+            <button onclick="sendFeedback(this, false)" title="Bad Response"><i class="fas fa-thumbs-down"></i></button>
+        </div>` : ''}
+    `;
+    chatCanvas.appendChild(msgDiv);
+    chatCanvas.scrollTop = chatCanvas.scrollHeight;
+}
+
+async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    addMessage('user', text);
+    userInput.value = '';
+    fileNameDisplay.textContent = ""; // Clear file name
+    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    sendBtn.disabled = true;
+
+    try {
+        const response = await fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: "demo-user-123", message: text })
+        });
+        const data = await response.json();
+        addMessage('assistant', data.response, data.type);
+    } catch (error) {
+        console.error(error);
+        addMessage('assistant', "Sorry, I'm having trouble connecting to the X-ZITH servers. Please check if the Hugging Face backend is running.");
+    } finally {
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+        sendBtn.disabled = false;
+    }
+}
+
+// --- 5. ACTION BUTTONS ---
+function speakText(btn) {
+    const text = btn.closest('.message').querySelector('.msg-content').innerText;
+    const utterance = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(utterance);
+}
+
+function copyText(btn) {
+    const text = btn.closest('.message').querySelector('.msg-content').innerText;
+    navigator.clipboard.writeText(text);
+    const originalIcon = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i>';
+    setTimeout(() => btn.innerHTML = originalIcon, 2000);
+}
+
+function sendFeedback(btn, isLiked) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('button').forEach(b => b.classList.remove('active-like', 'active-dislike'));
+    btn.classList.add(isLiked ? 'active-like' : 'active-dislike');
+    console.log(`Feedback sent: ${isLiked ? 'Liked' : 'Disliked'}`);
+}
+
+// --- 6. VOICE INPUT ---
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+
+    voiceBtn.addEventListener('click', () => {
+        voiceBtn.classList.add('listening');
+        recognition.start();
+    });
+
+    recognition.onresult = (event) => {
+        userInput.value = event.results[0][0].transcript;
+        voiceBtn.classList.remove('listening');
+    };
+    recognition.onend = () => voiceBtn.classList.remove('listening');
+} else {
+    voiceBtn.style.display = 'none';
+}
+
+// --- 7. EVENT LISTENERS ---
+sendBtn.addEventListener('click', sendMessage);
+userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
