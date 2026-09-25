@@ -8,18 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="sidebar-top">
-            <button class="btn-new-chat"><i class="fas fa-plus"></i> New Chat</button>
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search chats...">
-            </div>
+    <!-- OVERLAY (Closes menu when clicked) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- SLIDE-OUT MENU / SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Fixto AI</h2>
+            <button id="close-sidebar" class="close-btn"><i class="fas fa-times"></i></button>
         </div>
         
+        <button class="btn-new-chat"><i class="fas fa-plus"></i> New Chat</button>
+        
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search chats...">
+        </div>
+
         <nav class="sidebar-nav">
-            <!-- Added 'nav-link' class for JavaScript clicking -->
             <a href="#" class="nav-link active" data-view="chats"><i class="fas fa-comment"></i> Chats</a>
             <a href="#" class="nav-link" data-view="images"><i class="fas fa-image"></i> Image Gallery</a>
             <a href="#" class="nav-link" data-view="library"><i class="fas fa-book"></i> Library</a>
@@ -32,12 +38,22 @@
                 <li><i class="fas fa-message"></i> Welcome to Fixto AI</li>
             </ul>
         </div>
+
+        <!-- USER PROFILE & EMAIL AT THE BOTTOM -->
+        <div class="user-profile" id="user-profile-btn">
+            <div class="user-avatar"><i class="fas fa-user"></i></div>
+            <div class="user-info">
+                <span class="user-email">promise@xzith.com</span> <!-- Replace with dynamic email later -->
+                <span class="user-action">Settings <i class="fas fa-cog"></i></span>
+            </div>
+        </div>
     </aside>
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
-        <!-- NEW: Top Header with Auth Buttons -->
+        <!-- TOP HEADER WITH HAMBURGER MENU -->
         <header class="top-header">
+            <button id="menu-toggle" class="menu-btn"><i class="fas fa-bars"></i></button>
             <div class="header-title">Fixto AI</div>
             <div class="auth-buttons">
                 <button class="btn-auth btn-login">Log In</button>
@@ -55,7 +71,6 @@
         <!-- INPUT AREA -->
         <div class="input-area">
             <div class="input-box">
-                <!-- NEW: Upload Button -->
                 <button id="upload-btn" title="Attach image, file, or video">
                     <i class="fas fa-plus"></i>
                 </button>
@@ -71,6 +86,41 @@
         </div>
     </main>
 
+    <!-- SETTINGS MODAL -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="close-modal" id="close-settings"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <span>Theme</span>
+                    <select class="setting-select">
+                        <option>Dark Mode</option>
+                        <option>Light Mode</option>
+                        <option>System</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <span>Save Chat History</span>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span>Clear All Chats</span>
+                    <button class="btn-danger">Clear Data</button>
+                </div>
+                <div class="setting-item">
+                    <span>About</span>
+                    <span class="setting-text">Fixto AI v1.0 by X-ZITH TECHNOLOGY</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
-</html>                          
+</html>               
