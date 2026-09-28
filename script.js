@@ -11,12 +11,10 @@ const fileInput = document.getElementById('file-input');
 const fileNameDisplay = document.getElementById('file-name');
 const navLinks = document.querySelectorAll('.nav-link');
 
-// Menu & Modal Elements
 const menuToggle = document.getElementById('menu-toggle');
 const closeSidebar = document.getElementById('close-sidebar');
 const sidebar = document.getElementById('sidebar');
 const sidebarOverlay = document.getElementById('sidebar-overlay');
-const userProfileBtn = document.getElementById('user-profile-btn');
 
 // 1. MENU LOGIC
 function openMenu() { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); }
@@ -25,47 +23,97 @@ menuToggle.addEventListener('click', openMenu);
 closeSidebar.addEventListener('click', closeMenu);
 sidebarOverlay.addEventListener('click', closeMenu);
 
-// 2. VIEW SWITCHING LOGIC (Image, Library, Projects)
+// 2. VIEW SWITCHING LOGIC
+function switchView(viewName) {
+    navLinks.forEach(l => l.classList.remove('active'));
+    const activeLink = document.querySelector(`.nav-link[data-view="${viewName}"]`);
+    if(activeLink) activeLink.classList.add('active');
+    
+    document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active-view'));
+    document.getElementById(`view-${viewName}`).classList.add('active-view');
+    closeMenu();
+}
+
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-        
-        const viewName = link.getAttribute('data-view');
-        
-        // Hide all views
-        document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active-view'));
-        // Show selected view
-        document.getElementById(`view-${viewName}`).classList.add('active-view');
-        
-        closeMenu();
+        switchView(link.getAttribute('data-view'));
     });
 });
 
-// 3. AUTH MODAL LOGIC
-document.querySelector('.btn-login').addEventListener('click', () => document.getElementById('login-modal').classList.add('open'));
-document.querySelector('.btn-signup').addEventListener('click', () => document.getElementById('signup-modal').classList.add('open'));
-userProfileBtn.addEventListener('click', () => document.getElementById('settings-modal').classList.add('open'));
-
+// 3. AUTH & FOOTER LOGIC
+function openModal(id) { document.getElementById(id).classList.add('open'); closeMenu(); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// Simulate Login (Changes UI to show logged in state)
 function simulateLogin() {
     closeModal('login-modal');
     closeModal('signup-modal');
-    document.getElementById('auth-buttons').style.display = 'none';
-    document.getElementById('user-logged-in').style.display = 'flex';
-    document.querySelector('.user-email').textContent = "promise@xzith.com (Logged In)";
+    document.getElementById('sidebar-footer-auth').style.display = 'none';
+    document.getElementById('sidebar-footer-profile').style.display = 'block';
 }
 
-// 4. FILE UPLOAD
+function simulateLogout() {
+    closeModal('settings-modal');
+    document.getElementById('sidebar-footer-auth').style.display = 'block';
+    document.getElementById('sidebar-footer-profile').style.display = 'none';
+}
+
+// 4. LIBRARY TABS LOGIC
+function switchLibraryTab(type, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const items = document.querySelectorAll('.library-item');
+    items.forEach(item => {
+        if (type === 'all' || item.getAttribute('data-type') === type) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+// 5. PROJECT CREATION LOGIC
+function createProject(category) {
+    const projectName = prompt(`Enter name for your ${category} project:`);
+    if (projectName) {
+        const projectList = document.getElementById('project-list');
+        const projectHTML = `
+            <div class="project-card">
+                <div class="project-card-header">
+                    <h4>${projectName} (${category})</h4>
+                    <i class="fas fa-ellipsis-v" style="color: var(--text-secondary); cursor: pointer;"></i>
+                </div>
+                <div class="project-chat-box">
+                    <input type="text" placeholder="Write something inside...">
+                    <button><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        `;
+        projectList.insertAdjacentHTML('beforeend', projectHTML);
+    }
+}
+
+// 6. IMAGE STUDIO LOGIC
+function generateStudioImage() {
+    const prompt = document.getElementById('image-prompt').value.trim();
+    if (!prompt) return;
+    
+    const grid = document.getElementById('studio-image-grid');
+    const safePrompt = encodeURIComponent(prompt);
+    const imageUrl = `https://image.pollinations.ai/prompt/${safePrompt}?width=400&height=400&nologo=true&seed=${Math.floor(Math.random() * 1000)}`;
+    
+    const imgHTML = `<div class="image-card"><img src="${imageUrl}" alt="AI"><p>${prompt}</p></div>`;
+    grid.insertAdjacentHTML('afterbegin', imgHTML);
+    document.getElementById('image-prompt').value = '';
+}
+
+// 7. FILE UPLOAD & CHAT LOGIC
 uploadBtn.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', () => {
     fileNameDisplay.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : "";
 });
 
-// 5. CHAT LOGIC
 function addMessage(role, content, type = 'text') {
     if (welcomeScreen) welcomeScreen.style.display = 'none';
     const msgDiv = document.createElement('div');
@@ -101,7 +149,6 @@ function speakText(btn) { const text = btn.closest('.message').querySelector('.m
 function copyText(btn) { const text = btn.closest('.message').querySelector('.msg-content').innerText; navigator.clipboard.writeText(text); btn.innerHTML = '<i class="fas fa-check"></i>'; setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i>', 2000); }
 function sendFeedback(btn, isLiked) { const parent = btn.parentElement; parent.querySelectorAll('button').forEach(b => b.classList.remove('active-like', 'active-dislike')); btn.classList.add(isLiked ? 'active-like' : 'active-dislike'); }
 
-// 6. VOICE INPUT
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
     const recognition = new SpeechRecognition();
