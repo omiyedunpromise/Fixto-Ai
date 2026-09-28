@@ -10,17 +10,13 @@
 <body>
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <!-- SLIDE-OUT MENU -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>Fixto AI</h2>
             <button id="close-sidebar" class="close-btn"><i class="fas fa-times"></i></button>
         </div>
         <button class="btn-new-chat" onclick="switchView('chats')"><i class="fas fa-plus"></i> New Chat</button>
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search chats...">
-        </div>
+        <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Search chats..."></div>
         <nav class="sidebar-nav">
             <a href="#" class="nav-link active" data-view="chats"><i class="fas fa-comment"></i> Chats</a>
             <a href="#" class="nav-link" data-view="images"><i class="fas fa-image"></i> Image Studio</a>
@@ -29,22 +25,21 @@
         </nav>
         <div class="sidebar-history">
             <h4>Recent</h4>
-            <ul id="chat-history-list">
-                <li><i class="fas fa-message"></i> Welcome to Fixto AI</li>
-            </ul>
+            <ul id="chat-history-list"><li><i class="fas fa-message"></i> Welcome to Fixto AI</li></ul>
         </div>
 
-        <!-- DYNAMIC FOOTER: Shows Login/Signup OR User Profile -->
+        <!-- NOT LOGGED IN -->
         <div class="sidebar-footer" id="sidebar-footer-auth">
             <button class="btn-footer" onclick="openModal('login-modal')"><i class="fas fa-sign-in-alt"></i> Log In</button>
             <button class="btn-footer btn-signup-footer" onclick="openModal('signup-modal')"><i class="fas fa-user-plus"></i> Sign Up</button>
         </div>
-        <div class="sidebar-footer" id="sidebar-footer-profile" style="display: none;">
-            <div class="user-profile" onclick="openModal('settings-modal')">
-                <div class="user-avatar"><i class="fas fa-user"></i></div>
+        <!-- LOGGED IN: Shows the user's NAME -->
+        <div class="sidebar-footer" id="sidebar-footer-profile" style="display:none;">
+            <div class="user-profile" onclick="openSettings()">
+                <div class="user-avatar" id="user-avatar-letter">P</div>
                 <div class="user-info">
-                    <span class="user-email" id="user-email-display">promise@xzith.com</span>
-                    <span class="user-action">Settings <i class="fas fa-cog"></i></span>
+                    <span class="user-email" id="user-name-display">Guest</span>
+                    <span class="user-action">Full details & Settings <i class="fas fa-cog"></i></span>
                 </div>
             </div>
         </div>
@@ -56,12 +51,11 @@
             <div class="header-title">Fixto AI</div>
         </header>
 
-        <!-- 1. CHATS VIEW -->
+        <!-- CHAT VIEW -->
         <div id="view-chats" class="view-container active-view">
             <div class="chat-canvas" id="chat-canvas">
                 <div class="welcome-screen" id="welcome-screen">
-                    <h1>Fixto AI</h1>
-                    <p>Powered by X-ZITH TECHNOLOGY. How can I help you today?</p>
+                    <h1>Ask Fixto</h1>
                 </div>
             </div>
             <div class="input-area">
@@ -78,7 +72,7 @@
             </div>
         </div>
 
-        <!-- 2. IMAGE STUDIO VIEW -->
+        <!-- IMAGE STUDIO -->
         <div id="view-images" class="view-container">
             <div class="view-header"><h2><i class="fas fa-palette"></i> Image Studio</h2></div>
             <div class="image-studio-container">
@@ -86,14 +80,11 @@
                     <textarea id="image-prompt" placeholder="Describe the image you want to generate..."></textarea>
                     <button id="generate-image-btn" onclick="generateStudioImage()">Generate <i class="fas fa-magic"></i></button>
                 </div>
-                <div class="image-grid" id="studio-image-grid">
-                    <!-- Generated images appear here -->
-                    <div class="image-card"><img src="https://image.pollinations.ai/prompt/futuristic%20city?width=400&height=400&nologo=true" alt="AI"><p>Futuristic City</p></div>
-                </div>
+                <div class="image-grid" id="studio-image-grid"></div>
             </div>
         </div>
 
-        <!-- 3. LIBRARY VIEW -->
+        <!-- LIBRARY -->
         <div id="view-library" class="view-container">
             <div class="view-header"><h2><i class="fas fa-book"></i> My Library</h2></div>
             <div class="library-tabs">
@@ -111,7 +102,7 @@
             </div>
         </div>
 
-        <!-- 4. PROJECTS VIEW -->
+        <!-- PROJECTS -->
         <div id="view-projects" class="view-container">
             <div class="view-header"><h2><i class="fas fa-briefcase"></i> Projects</h2></div>
             <div class="project-categories">
@@ -126,9 +117,7 @@
             </div>
             <div class="my-projects">
                 <h3>My Projects</h3>
-                <div class="project-list" id="project-list">
-                    <!-- Created projects appear here -->
-                </div>
+                <div class="project-list" id="project-list"></div>
             </div>
         </div>
     </main>
@@ -138,12 +127,13 @@
         <div class="modal-content auth-modal">
             <button class="close-modal" onclick="closeModal('login-modal')"><i class="fas fa-times"></i></button>
             <h2>Welcome Back</h2>
-            <button class="btn-social"><i class="fab fa-apple"></i> Continue with Apple</button>
-            <button class="btn-social"><i class="fab fa-microsoft"></i> Continue with Microsoft</button>
+            <button class="btn-social" onclick="loginWith('Google')"><i class="fab fa-google"></i> Continue with Google</button>
+            <button class="btn-social" onclick="loginWith('Apple')"><i class="fab fa-apple"></i> Continue with Apple</button>
+            <button class="btn-social" onclick="loginWith('Microsoft')"><i class="fab fa-microsoft"></i> Continue with Microsoft</button>
             <div class="divider"><span>OR</span></div>
-            <input type="email" placeholder="Email address" class="auth-input">
+            <input type="email" id="login-email" placeholder="Email address" class="auth-input">
             <input type="password" placeholder="Password" class="auth-input">
-            <button class="btn-primary" onclick="simulateLogin()">Log In</button>
+            <button class="btn-primary" onclick="emailLogin()">Log In</button>
         </div>
     </div>
 
@@ -152,26 +142,34 @@
         <div class="modal-content auth-modal">
             <button class="close-modal" onclick="closeModal('signup-modal')"><i class="fas fa-times"></i></button>
             <h2>Create Account</h2>
-            <button class="btn-social"><i class="fab fa-apple"></i> Continue with Apple</button>
-            <button class="btn-social"><i class="fab fa-microsoft"></i> Continue with Microsoft</button>
+            <button class="btn-social" onclick="loginWith('Google')"><i class="fab fa-google"></i> Continue with Google</button>
+            <button class="btn-social" onclick="loginWith('Apple')"><i class="fab fa-apple"></i> Continue with Apple</button>
+            <button class="btn-social" onclick="loginWith('Microsoft')"><i class="fab fa-microsoft"></i> Continue with Microsoft</button>
             <div class="divider"><span>OR</span></div>
-            <input type="text" placeholder="Full Name" class="auth-input">
-            <input type="email" placeholder="Email address" class="auth-input">
+            <input type="text" id="signup-name" placeholder="Full Name" class="auth-input">
+            <input type="email" id="signup-email" placeholder="Email address" class="auth-input">
             <input type="password" placeholder="Password" class="auth-input">
-            <button class="btn-primary" onclick="simulateLogin()">Sign Up</button>
+            <button class="btn-primary" onclick="emailSignup()">Sign Up</button>
         </div>
     </div>
 
-    <!-- SETTINGS MODAL -->
+    <!-- SETTINGS MODAL WITH FULL DETAILS -->
     <div class="modal" id="settings-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Settings</h3>
+                <h3>Settings & Profile</h3>
                 <button class="close-modal" onclick="closeModal('settings-modal')"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
+                <div class="profile-details">
+                    <div class="setting-item"><span>Full Name</span><span class="setting-text" id="settings-name">-</span></div>
+                    <div class="setting-item"><span>Email</span><span class="setting-text" id="settings-email">-</span></div>
+                    <div class="setting-item"><span>Signed in with</span><span class="setting-text" id="settings-provider">-</span></div>
+                    <div class="setting-item"><span>Plan</span><span class="setting-text">Free</span></div>
+                </div>
                 <div class="setting-item"><span>Theme</span><select class="setting-select"><option>Dark Mode</option><option>Light Mode</option></select></div>
                 <div class="setting-item"><span>Save Chat History</span><label class="switch"><input type="checkbox" checked><span class="slider round"></span></label></div>
+                <p class="about-text">Fixto AI was created by the team at X-ZITH TECHNOLOGY. CEO & Founder: Promise Omiyedun.</p>
                 <button class="btn-danger" onclick="simulateLogout()">Log Out</button>
             </div>
         </div>
@@ -179,4 +177,4 @@
 
     <script src="script.js"></script>
 </body>
-</html>            
+    </html>         
