@@ -16,14 +16,14 @@
             <h2>Fixto AI</h2>
             <button id="close-sidebar" class="close-btn"><i class="fas fa-times"></i></button>
         </div>
-        <button class="btn-new-chat"><i class="fas fa-plus"></i> New Chat</button>
+        <button class="btn-new-chat" onclick="switchView('chats')"><i class="fas fa-plus"></i> New Chat</button>
         <div class="search-box">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search chats...">
         </div>
         <nav class="sidebar-nav">
             <a href="#" class="nav-link active" data-view="chats"><i class="fas fa-comment"></i> Chats</a>
-            <a href="#" class="nav-link" data-view="images"><i class="fas fa-image"></i> Image Gallery</a>
+            <a href="#" class="nav-link" data-view="images"><i class="fas fa-image"></i> Image Studio</a>
             <a href="#" class="nav-link" data-view="library"><i class="fas fa-book"></i> Library</a>
             <a href="#" class="nav-link" data-view="projects"><i class="fas fa-briefcase"></i> Projects</a>
         </nav>
@@ -33,11 +33,19 @@
                 <li><i class="fas fa-message"></i> Welcome to Fixto AI</li>
             </ul>
         </div>
-        <div class="user-profile" id="user-profile-btn">
-            <div class="user-avatar"><i class="fas fa-user"></i></div>
-            <div class="user-info">
-                <span class="user-email">promise@xzith.com</span>
-                <span class="user-action">Settings <i class="fas fa-cog"></i></span>
+
+        <!-- DYNAMIC FOOTER: Shows Login/Signup OR User Profile -->
+        <div class="sidebar-footer" id="sidebar-footer-auth">
+            <button class="btn-footer" onclick="openModal('login-modal')"><i class="fas fa-sign-in-alt"></i> Log In</button>
+            <button class="btn-footer btn-signup-footer" onclick="openModal('signup-modal')"><i class="fas fa-user-plus"></i> Sign Up</button>
+        </div>
+        <div class="sidebar-footer" id="sidebar-footer-profile" style="display: none;">
+            <div class="user-profile" onclick="openModal('settings-modal')">
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+                <div class="user-info">
+                    <span class="user-email" id="user-email-display">promise@xzith.com</span>
+                    <span class="user-action">Settings <i class="fas fa-cog"></i></span>
+                </div>
             </div>
         </div>
     </aside>
@@ -46,17 +54,9 @@
         <header class="top-header">
             <button id="menu-toggle" class="menu-btn"><i class="fas fa-bars"></i></button>
             <div class="header-title">Fixto AI</div>
-            <div class="auth-buttons" id="auth-buttons">
-                <button class="btn-auth btn-login">Log In</button>
-                <button class="btn-auth btn-signup">Sign Up</button>
-            </div>
-            <!-- Logged In State (Hidden by default) -->
-            <div class="user-logged-in" id="user-logged-in" style="display: none;">
-                <div class="user-avatar-small">P</div>
-            </div>
         </header>
 
-        <!-- VIEW CONTAINERS -->
+        <!-- 1. CHATS VIEW -->
         <div id="view-chats" class="view-container active-view">
             <div class="chat-canvas" id="chat-canvas">
                 <div class="welcome-screen" id="welcome-screen">
@@ -66,8 +66,8 @@
             </div>
             <div class="input-area">
                 <div class="input-box">
-                    <button id="upload-btn" title="Attach"><i class="fas fa-plus"></i></button>
-                    <input type="file" id="file-input" hidden>
+                    <button id="upload-btn" title="Attach Image/File"><i class="fas fa-paperclip"></i></button>
+                    <input type="file" id="file-input" hidden accept="image/*,video/*,.pdf,.doc,.docx,.txt">
                     <span id="file-name" class="file-name-display"></span>
                     <textarea id="user-input" placeholder="Message Fixto AI..." rows="1"></textarea>
                     <div class="input-actions">
@@ -78,31 +78,57 @@
             </div>
         </div>
 
-        <!-- IMAGE GALLERY VIEW -->
+        <!-- 2. IMAGE STUDIO VIEW -->
         <div id="view-images" class="view-container">
-            <div class="view-header"><h2>Image Gallery</h2></div>
-            <div class="image-grid">
-                <!-- Dummy images for now -->
-                <div class="image-card"><img src="https://image.pollinations.ai/prompt/futuristic%20city?width=400&height=400&nologo=true" alt="AI Image"><p>Futuristic City</p></div>
-                <div class="image-card"><img src="https://image.pollinations.ai/prompt/robot%20coding?width=400&height=400&nologo=true" alt="AI Image"><p>Robot Coding</p></div>
+            <div class="view-header"><h2><i class="fas fa-palette"></i> Image Studio</h2></div>
+            <div class="image-studio-container">
+                <div class="image-prompt-box">
+                    <textarea id="image-prompt" placeholder="Describe the image you want to generate..."></textarea>
+                    <button id="generate-image-btn" onclick="generateStudioImage()">Generate <i class="fas fa-magic"></i></button>
+                </div>
+                <div class="image-grid" id="studio-image-grid">
+                    <!-- Generated images appear here -->
+                    <div class="image-card"><img src="https://image.pollinations.ai/prompt/futuristic%20city?width=400&height=400&nologo=true" alt="AI"><p>Futuristic City</p></div>
+                </div>
             </div>
         </div>
 
-        <!-- LIBRARY VIEW -->
+        <!-- 3. LIBRARY VIEW -->
         <div id="view-library" class="view-container">
-            <div class="view-header"><h2>My Library</h2></div>
-            <div class="library-list">
-                <div class="library-item"><i class="fas fa-file-pdf"></i> <span>X-ZITH Business Plan.pdf</span></div>
-                <div class="library-item"><i class="fas fa-file-code"></i> <span>Python Script.py</span></div>
+            <div class="view-header"><h2><i class="fas fa-book"></i> My Library</h2></div>
+            <div class="library-tabs">
+                <button class="tab-btn active" onclick="switchLibraryTab('all', this)">All</button>
+                <button class="tab-btn" onclick="switchLibraryTab('image', this)">Images</button>
+                <button class="tab-btn" onclick="switchLibraryTab('document', this)">Documents</button>
+                <button class="tab-btn" onclick="switchLibraryTab('video', this)">Videos</button>
+                <button class="tab-btn" onclick="switchLibraryTab('pdf', this)">PDFs</button>
+            </div>
+            <div class="library-content" id="library-content">
+                <div class="library-item" data-type="pdf"><i class="fas fa-file-pdf"></i> <span>X-ZITH Business Plan.pdf</span></div>
+                <div class="library-item" data-type="image"><i class="fas fa-image"></i> <span>Generated Robot.png</span></div>
+                <div class="library-item" data-type="document"><i class="fas fa-file-code"></i> <span>Python Script.py</span></div>
+                <div class="library-item" data-type="video"><i class="fas fa-video"></i> <span>Tutorial.mp4</span></div>
             </div>
         </div>
 
-        <!-- PROJECTS VIEW -->
+        <!-- 4. PROJECTS VIEW -->
         <div id="view-projects" class="view-container">
-            <div class="view-header"><h2>My Projects</h2></div>
-            <div class="project-grid">
-                <div class="project-card"><i class="fas fa-folder"></i> <h3>X-ZITH App Dev</h3><p>5 chats</p></div>
-                <div class="project-card"><i class="fas fa-folder"></i> <h3>Marketing Ideas</h3><p>2 chats</p></div>
+            <div class="view-header"><h2><i class="fas fa-briefcase"></i> Projects</h2></div>
+            <div class="project-categories">
+                <h3>Categories</h3>
+                <div class="category-grid">
+                    <div class="category-card" onclick="createProject('Investment')"><i class="fas fa-chart-line"></i> Investment</div>
+                    <div class="category-card" onclick="createProject('Homework')"><i class="fas fa-graduation-cap"></i> Homework</div>
+                    <div class="category-card" onclick="createProject('Writing')"><i class="fas fa-pen-nib"></i> Writing</div>
+                    <div class="category-card" onclick="createProject('Health')"><i class="fas fa-heartbeat"></i> Health</div>
+                    <div class="category-card" onclick="createProject('Travel')"><i class="fas fa-plane"></i> Travel</div>
+                </div>
+            </div>
+            <div class="my-projects">
+                <h3>My Projects</h3>
+                <div class="project-list" id="project-list">
+                    <!-- Created projects appear here -->
+                </div>
             </div>
         </div>
     </main>
@@ -112,9 +138,8 @@
         <div class="modal-content auth-modal">
             <button class="close-modal" onclick="closeModal('login-modal')"><i class="fas fa-times"></i></button>
             <h2>Welcome Back</h2>
-            <p>Log in to Fixto AI</p>
-            <button class="btn-social"><i class="fab fa-google"></i> Continue with Google</button>
-            <button class="btn-social"><i class="fab fa-github"></i> Continue with GitHub</button>
+            <button class="btn-social"><i class="fab fa-apple"></i> Continue with Apple</button>
+            <button class="btn-social"><i class="fab fa-microsoft"></i> Continue with Microsoft</button>
             <div class="divider"><span>OR</span></div>
             <input type="email" placeholder="Email address" class="auth-input">
             <input type="password" placeholder="Password" class="auth-input">
@@ -127,9 +152,8 @@
         <div class="modal-content auth-modal">
             <button class="close-modal" onclick="closeModal('signup-modal')"><i class="fas fa-times"></i></button>
             <h2>Create Account</h2>
-            <p>Join X-ZITH TECHNOLOGY</p>
-            <button class="btn-social"><i class="fab fa-google"></i> Continue with Google</button>
-            <button class="btn-social"><i class="fab fa-github"></i> Continue with GitHub</button>
+            <button class="btn-social"><i class="fab fa-apple"></i> Continue with Apple</button>
+            <button class="btn-social"><i class="fab fa-microsoft"></i> Continue with Microsoft</button>
             <div class="divider"><span>OR</span></div>
             <input type="text" placeholder="Full Name" class="auth-input">
             <input type="email" placeholder="Email address" class="auth-input">
@@ -148,10 +172,11 @@
             <div class="modal-body">
                 <div class="setting-item"><span>Theme</span><select class="setting-select"><option>Dark Mode</option><option>Light Mode</option></select></div>
                 <div class="setting-item"><span>Save Chat History</span><label class="switch"><input type="checkbox" checked><span class="slider round"></span></label></div>
+                <button class="btn-danger" onclick="simulateLogout()">Log Out</button>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
-</html>                
+</html>            
